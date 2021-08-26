@@ -135,8 +135,9 @@ namespace BinaryShenanigans.Writer
         }
 #endif
 
-        public void Write(string value, Encoding encoding)
+        public void Write(string value, Encoding encoding, bool nullTerminated = false)
         {
+            value = nullTerminated ? value + '\0' : value;
             var bytes = EncodingUtils.ConvertFromCharToByte(value.AsSpan(), encoding);
             var span = GetSpan(bytes.Length);
             bytes.CopyTo(span);

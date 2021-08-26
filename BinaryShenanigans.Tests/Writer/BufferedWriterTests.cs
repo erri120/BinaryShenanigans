@@ -143,6 +143,17 @@ namespace BinaryShenanigans.Tests.Writer
             Assert.Equal(value, actualValue.ToString());
         }
 
+        public override void TestWriteStringNullTerminated(string value)
+        {
+            var buffer = new byte[Encoding.UTF8.GetByteCount(value.AsSpan())+1];
+            var writer = new BufferedWriter(buffer, 0, buffer.Length);
+
+            writer.Write(value, Encoding.UTF8, true);
+
+            var actualValue = EncodingUtils.ConvertFromByteToChar(new ReadOnlySpan<byte>(buffer, 0, buffer.Length), Encoding.UTF8);
+            Assert.Equal(value, actualValue[..^1].ToString());
+        }
+
         private static void TestBufferedWriter<T>(int size, bool littleEndian, Action<BufferedWriter> writeValue, Func<byte[], T> readValue, T expectedValue)
         {
             var buffer = new byte[size];

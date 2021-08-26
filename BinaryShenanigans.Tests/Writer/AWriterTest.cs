@@ -104,5 +104,10 @@ namespace BinaryShenanigans.Tests.Writer
         [InlineData("Hello World!")]
         [InlineData("日本語")]
         public abstract void TestWriteString(string value);
+
+        [Theory]
+        [InlineData("Hello World!")]
+        [InlineData("日本語")]
+        public abstract void TestWriteStringNullTerminated(string value);
     }
 }
