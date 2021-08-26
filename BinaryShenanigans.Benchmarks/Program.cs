@@ -5,6 +5,7 @@ using BinaryShenanigans.Benchmarks.Benchmarks;
 BenchmarkRunner.Run<SpanMemoryArraySegmentBenchmarks>();
 BenchmarkRunner.Run<MemoryStreamBenchmarks>();
 BenchmarkRunner.Run<ExpressionBenchmarks>();
+BenchmarkRunner.Run<EncodingBenchmarks>();
 
 // extensions benchmarks
 BenchmarkRunner.Run<BinaryReaderExtensionsBenchmarks>();
