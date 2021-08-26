@@ -85,8 +85,8 @@ namespace BinaryShenanigans.Tests.Reader
             var buffer = new byte[sizeof(double)];
             TestSpanReader(
                 buffer.AsSpan(),
-                littleEndian ? () => BinaryPrimitives.WriteDoubleLittleEndian(buffer.AsSpan(), value)
-                    : () => BinaryPrimitives.WriteDoubleBigEndian(buffer.AsSpan(), value),
+                littleEndian ? () => BinaryPrimitivesMethods.WriteDoubleLittleEndian(buffer.AsSpan(), value)
+                    : () => BinaryPrimitivesMethods.WriteDoubleBigEndian(buffer.AsSpan(), value),
                 littleEndian,
                 reader => reader.ReadDouble(buffer.AsSpan()),
                 value);
@@ -97,13 +97,14 @@ namespace BinaryShenanigans.Tests.Reader
             var buffer = new byte[sizeof(float)];
             TestSpanReader(
                 buffer.AsSpan(),
-                littleEndian ? () => BinaryPrimitives.WriteSingleLittleEndian(buffer.AsSpan(), value)
-                    : () => BinaryPrimitives.WriteSingleBigEndian(buffer.AsSpan(), value),
+                littleEndian ? () => BinaryPrimitivesMethods.WriteSingleLittleEndian(buffer.AsSpan(), value)
+                    : () => BinaryPrimitivesMethods.WriteSingleBigEndian(buffer.AsSpan(), value),
                 littleEndian,
                 reader => reader.ReadSingle(buffer.AsSpan()),
                 value);
         }
 
+#if NET6_0_OR_GREATER
         public override void TestReadHalfMaxValue(bool littleEndian)
         {
             var buffer = new byte[Constants.HalfSize];
@@ -129,6 +130,7 @@ namespace BinaryShenanigans.Tests.Reader
                 reader => reader.ReadHalf(buffer.AsSpan()),
                 value);
         }
+#endif
 
         private static void TestSpanReader<T>(Span<byte> span, Action writeValue,
             bool littleEndian, Func<SpanReader, T> readValue, T expectedValue)

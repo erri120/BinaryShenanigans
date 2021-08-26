@@ -42,7 +42,9 @@ namespace BinaryShenanigans.Reader
         public ulong ReadUInt64() => ReadUInt64(LittleEndian);
         public double ReadDouble() => ReadDouble(LittleEndian);
         public float ReadSingle() => ReadSingle(LittleEndian);
+#if NET6_0_OR_GREATER
         public Half ReadHalf() => ReadHalf(LittleEndian);
+#endif
 
         public short ReadInt16LE() => ReadInt16(true);
         public int ReadInt32LE() => ReadInt32(true);
@@ -52,7 +54,9 @@ namespace BinaryShenanigans.Reader
         public ulong ReadUInt64LE() => ReadUInt64(true);
         public double ReadDoubleLE() => ReadDouble(true);
         public float ReadSingleLE() => ReadSingle(true);
+#if NET6_0_OR_GREATER
         public Half ReadHalfLE() => ReadHalf(true);
+#endif
 
         public short ReadInt16BE() => ReadInt16(false);
         public int ReadInt32BE() => ReadInt32(false);
@@ -62,7 +66,9 @@ namespace BinaryShenanigans.Reader
         public ulong ReadUInt64BE() => ReadUInt64(false);
         public double ReadDoubleBE() => ReadDouble(false);
         public float ReadSingleBE() => ReadSingle(false);
+#if NET6_0_OR_GREATER
         public Half ReadHalfBE() => ReadHalf(false);
+#endif
 
         public short ReadInt16(bool littleEndian) => littleEndian
             ? BinaryPrimitives.ReadInt16LittleEndian(GetSpan(sizeof(short)))
@@ -89,16 +95,18 @@ namespace BinaryShenanigans.Reader
             : BinaryPrimitives.ReadUInt64BigEndian(GetSpan(sizeof(ulong)));
 
         public double ReadDouble(bool littleEndian) => littleEndian
-            ? BinaryPrimitives.ReadDoubleLittleEndian(GetSpan(sizeof(double)))
-            : BinaryPrimitives.ReadDoubleBigEndian(GetSpan(sizeof(double)));
+            ? BinaryPrimitivesMethods.ReadDoubleLittleEndian(GetSpan(sizeof(double)))
+            : BinaryPrimitivesMethods.ReadDoubleBigEndian(GetSpan(sizeof(double)));
 
         public float ReadSingle(bool littleEndian) => littleEndian
-            ? BinaryPrimitives.ReadSingleLittleEndian(GetSpan(sizeof(float)))
-            : BinaryPrimitives.ReadSingleBigEndian(GetSpan(sizeof(float)));
+            ? BinaryPrimitivesMethods.ReadSingleLittleEndian(GetSpan(sizeof(float)))
+            : BinaryPrimitivesMethods.ReadSingleBigEndian(GetSpan(sizeof(float)));
 
+#if NET6_0_OR_GREATER
         public Half ReadHalf(bool littleEndian) => littleEndian
             ? BinaryPrimitives.ReadHalfLittleEndian(GetSpan(Constants.HalfSize))
             : BinaryPrimitives.ReadHalfBigEndian(GetSpan(Constants.HalfSize));
+#endif
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private ReadOnlySpan<byte> GetSpan(int size)

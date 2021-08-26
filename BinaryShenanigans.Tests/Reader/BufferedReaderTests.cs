@@ -18,7 +18,7 @@ namespace BinaryShenanigans.Tests.Reader
                 value,
                 reader => reader.ReadInt16());
         }
-        
+
         public override void TestReadInt32(int value, bool littleEndian)
         {
             TestBufferedReader(
@@ -30,7 +30,7 @@ namespace BinaryShenanigans.Tests.Reader
                 value,
                 reader => reader.ReadInt32());
         }
-        
+
         public override void TestReadInt64(long value, bool littleEndian)
         {
             TestBufferedReader(
@@ -42,7 +42,7 @@ namespace BinaryShenanigans.Tests.Reader
                 value,
                 reader => reader.ReadInt64());
         }
-        
+
         public override void TestReadUInt16(ushort value, bool littleEndian)
         {
             TestBufferedReader(
@@ -54,7 +54,7 @@ namespace BinaryShenanigans.Tests.Reader
                 value,
                 reader => reader.ReadUInt16());
         }
-        
+
         public override void TestReadUInt32(uint value, bool littleEndian)
         {
             TestBufferedReader(
@@ -66,7 +66,7 @@ namespace BinaryShenanigans.Tests.Reader
                 value,
                 reader => reader.ReadUInt32());
         }
-        
+
         public override void TestReadUInt64(ulong value, bool littleEndian)
         {
             TestBufferedReader(
@@ -78,31 +78,32 @@ namespace BinaryShenanigans.Tests.Reader
                 value,
                 reader => reader.ReadUInt64());
         }
-        
+
         public override void TestReadDouble(double value, bool littleEndian)
         {
             TestBufferedReader(
                 sizeof(double),
                 littleEndian
-                    ? x => BinaryPrimitives.WriteDoubleLittleEndian(x.AsSpan(), value)
-                    : x => BinaryPrimitives.WriteDoubleBigEndian(x.AsSpan(), value),
+                    ? x => BinaryPrimitivesMethods.WriteDoubleLittleEndian(x.AsSpan(), value)
+                    : x => BinaryPrimitivesMethods.WriteDoubleBigEndian(x.AsSpan(), value),
                 littleEndian,
                 value,
                 reader => reader.ReadDouble());
         }
-        
+
         public override void TestReadSingle(float value, bool littleEndian)
         {
             TestBufferedReader(
                 sizeof(float),
                 littleEndian
-                    ? x => BinaryPrimitives.WriteSingleLittleEndian(x.AsSpan(), value)
-                    : x => BinaryPrimitives.WriteSingleBigEndian(x.AsSpan(), value),
+                    ? x => BinaryPrimitivesMethods.WriteSingleLittleEndian(x.AsSpan(), value)
+                    : x => BinaryPrimitivesMethods.WriteSingleBigEndian(x.AsSpan(), value),
                 littleEndian,
                 value,
                 reader => reader.ReadSingle());
         }
 
+#if NET6_0_OR_GREATER
         public override void TestReadHalfMaxValue(bool littleEndian)
         {
             var value = Half.MaxValue;
@@ -115,7 +116,7 @@ namespace BinaryShenanigans.Tests.Reader
                 value,
                 reader => reader.ReadHalf());
         }
-        
+
         public override void TestReadHalfMinValue(bool littleEndian)
         {
             var value = Half.MinValue;
@@ -128,6 +129,7 @@ namespace BinaryShenanigans.Tests.Reader
                 value,
                 reader => reader.ReadHalf());
         }
+#endif
 
         private static void TestBufferedReader<T>(int size, Action<byte[]> writeValue, bool littleEndian,
             T expectedValue, Func<BufferedReader, T> readFunc)

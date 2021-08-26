@@ -87,8 +87,8 @@ public override void TestWriteInt16(short value, bool littleEndian)
                 littleEndian,
                 (writer, buffer) => writer.Write(buffer, value),
                 littleEndian
-                    ? buffer => BinaryPrimitives.ReadDoubleLittleEndian(buffer.AsSpan())
-                    : buffer => BinaryPrimitives.ReadDoubleBigEndian(buffer.AsSpan()),
+                    ? buffer => BinaryPrimitivesMethods.ReadDoubleLittleEndian(buffer.AsSpan())
+                    : buffer => BinaryPrimitivesMethods.ReadDoubleBigEndian(buffer.AsSpan()),
                 value);
         }
 
@@ -99,11 +99,12 @@ public override void TestWriteInt16(short value, bool littleEndian)
                 littleEndian,
                 (writer, buffer) => writer.Write(buffer, value),
                 littleEndian
-                    ? buffer => BinaryPrimitives.ReadSingleLittleEndian(buffer.AsSpan())
-                    : buffer => BinaryPrimitives.ReadSingleBigEndian(buffer.AsSpan()),
+                    ? buffer => BinaryPrimitivesMethods.ReadSingleLittleEndian(buffer.AsSpan())
+                    : buffer => BinaryPrimitivesMethods.ReadSingleBigEndian(buffer.AsSpan()),
                 value);
         }
 
+#if NET6_0_OR_GREATER
         public override void TestWriteHalfMaxValue(bool littleEndian)
         {
             var value = Half.MaxValue;
@@ -129,6 +130,7 @@ public override void TestWriteInt16(short value, bool littleEndian)
                     : buffer => BinaryPrimitives.ReadHalfBigEndian(buffer.AsSpan()),
                 value);
         }
+#endif
 
         private static void TestBufferedWriter<T>(int size, bool littleEndian, Action<SpanWriter, byte[]> writeValue, Func<byte[], T> readValue, T expectedValue)
         {

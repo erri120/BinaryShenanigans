@@ -22,7 +22,7 @@ namespace BinaryShenanigans.Tests.Reader
                 sizeof(short),
                 value);
         }
-        
+
         [Theory]
         [InlineData(int.MaxValue)]
         [InlineData(int.MinValue)]
@@ -36,7 +36,7 @@ namespace BinaryShenanigans.Tests.Reader
                 sizeof(int),
                 value);
         }
-        
+
         [Theory]
         [InlineData(long.MaxValue)]
         [InlineData(long.MinValue)]
@@ -63,7 +63,7 @@ namespace BinaryShenanigans.Tests.Reader
                 sizeof(ushort),
                 value);
         }
-        
+
         [Theory]
         [InlineData(uint.MaxValue)]
         [InlineData(uint.MinValue)]
@@ -76,7 +76,7 @@ namespace BinaryShenanigans.Tests.Reader
                 sizeof(uint),
                 value);
         }
-        
+
         [Theory]
         [InlineData(ulong.MaxValue)]
         [InlineData(ulong.MinValue)]
@@ -89,7 +89,7 @@ namespace BinaryShenanigans.Tests.Reader
                 sizeof(ulong),
                 value);
         }
-        
+
         [Theory]
         [InlineData(double.MaxValue)]
         [InlineData(double.MinValue)]
@@ -98,12 +98,12 @@ namespace BinaryShenanigans.Tests.Reader
         public void TestReadDoubleBE(double value)
         {
             TestBinaryReaderExtension(
-                buffer => BinaryPrimitives.WriteDoubleBigEndian(buffer.AsSpan(), value),
+                buffer => BinaryPrimitivesMethods.WriteDoubleBigEndian(buffer.AsSpan(), value),
                 br => br.ReadDoubleBE(),
                 sizeof(double),
                 value);
         }
-        
+
         [Theory]
         [InlineData(float.MaxValue)]
         [InlineData(float.MinValue)]
@@ -112,12 +112,13 @@ namespace BinaryShenanigans.Tests.Reader
         public void TestReadSingleBE(float value)
         {
             TestBinaryReaderExtension(
-                buffer => BinaryPrimitives.WriteSingleBigEndian(buffer.AsSpan(), value),
+                buffer => BinaryPrimitivesMethods.WriteSingleBigEndian(buffer.AsSpan(), value),
                 br => br.ReadSingleBE(),
                 sizeof(float),
                 value);
         }
-        
+
+#if NET6_0_OR_GREATER
         [Fact]
         public void TestReadHalfBEMaxValue()
         {
@@ -128,7 +129,7 @@ namespace BinaryShenanigans.Tests.Reader
                 sizeof(ushort),
                 value);
         }
-        
+
         [Fact]
         public void TestReadHalfBEMinValue()
         {
@@ -139,6 +140,7 @@ namespace BinaryShenanigans.Tests.Reader
                 sizeof(ushort),
                 value);
         }
+#endif
 
         [Fact]
         public void TestThrowsEndOfStreamExceptionWithMemoryStream()
@@ -149,7 +151,7 @@ namespace BinaryShenanigans.Tests.Reader
 
             Assert.Throws<EndOfStreamException>(() => br.ReadInt32BE());
         }
-        
+
         [Fact]
         public void TestThrowsEndOfStreamExceptionWithFileStream()
         {
@@ -159,13 +161,13 @@ namespace BinaryShenanigans.Tests.Reader
             var temp = Path.GetTempFileName();
             File.WriteAllBytes(temp, buffer);
             Assert.True(File.Exists(temp));
-            
+
             using (var fs = File.Open(temp, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var br = new BinaryReader(fs, Encoding.UTF8, false))
             {
                 Assert.Throws<EndOfStreamException>(() => br.ReadUInt32BE());
             }
-            
+
             File.Delete(temp);
             Assert.False(File.Exists(temp));
         }
@@ -179,18 +181,18 @@ namespace BinaryShenanigans.Tests.Reader
             var temp = Path.GetTempFileName();
             File.WriteAllBytes(temp, buffer);
             Assert.True(File.Exists(temp));
-            
+
             using (var fs = File.Open(temp, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var br = new BinaryReader(fs, Encoding.UTF8, false))
             {
                 var res = br.ReadUInt16BE();
                 Assert.Equal(ushort.MaxValue, res);
             }
-            
+
             File.Delete(temp);
             Assert.False(File.Exists(temp));
         }
-        
+
         private static void TestBinaryReaderExtension<T>(Action<byte[]> writeValue, Func<BinaryReader, T> readValue,
             int size, T expectedValue)
         {

@@ -88,6 +88,7 @@ namespace BinaryShenanigans.Tests.Reader
         [InlineData(float.MinValue / 2, false)]
         public abstract void TestReadSingle(float value, bool littleEndian);
 
+#if NET6_0_OR_GREATER
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -97,5 +98,6 @@ namespace BinaryShenanigans.Tests.Reader
         [InlineData(true)]
         [InlineData(false)]
         public abstract void TestReadHalfMinValue(bool littleEndian);
+#endif
     }
 }

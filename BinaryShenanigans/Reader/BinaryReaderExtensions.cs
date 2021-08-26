@@ -14,9 +14,12 @@ namespace BinaryShenanigans.Reader
         public static ushort ReadUInt16BE(this BinaryReader br) => BinaryPrimitives.ReadUInt16BigEndian(ReadBytes(br, sizeof(ushort)));
         public static uint ReadUInt32BE(this BinaryReader br) => BinaryPrimitives.ReadUInt32BigEndian(ReadBytes(br, sizeof(uint)));
         public static ulong ReadUInt64BE(this BinaryReader br) => BinaryPrimitives.ReadUInt64BigEndian(ReadBytes(br, sizeof(ulong)));
-        public static double ReadDoubleBE(this BinaryReader br) => BinaryPrimitives.ReadDoubleBigEndian(ReadBytes(br, sizeof(double)));
-        public static float ReadSingleBE(this BinaryReader br) => BinaryPrimitives.ReadSingleBigEndian(ReadBytes(br, sizeof(float)));
+        public static double ReadDoubleBE(this BinaryReader br) => BinaryPrimitivesMethods.ReadDoubleBigEndian(ReadBytes(br, sizeof(double)));
+        public static float ReadSingleBE(this BinaryReader br) => BinaryPrimitivesMethods.ReadSingleBigEndian(ReadBytes(br, sizeof(float)));
+
+#if NET6_0_OR_GREATER
         public static Half ReadHalfBE(this BinaryReader br) => BinaryPrimitives.ReadHalfBigEndian(ReadBytes(br, sizeof(ushort)));
+#endif
 
         private static ReadOnlySpan<byte> ReadBytes(BinaryReader br, int size)
         {
@@ -32,14 +35,14 @@ namespace BinaryShenanigans.Reader
                         throw new EndOfStreamException();
 
                     var res = new ReadOnlySpan<byte>(segment.Array, segment.Offset, Math.Min(segment.Count, size));
-                    
-                    // Seek is faster than updating Position 
+
+                    // Seek is faster than updating Position
                     ms.Seek(size, SeekOrigin.Current);
-                    
+
                     return res;
                 }
             }
-            
+
             var buffer = new byte[size];
             var count = br.Read(new Span<byte>(buffer, 0, size));
             if (count != size)

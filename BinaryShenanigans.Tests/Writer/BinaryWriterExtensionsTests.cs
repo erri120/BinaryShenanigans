@@ -27,7 +27,7 @@ namespace BinaryShenanigans.Tests.Writer
                 sizeof(short),
                 value);
         }
-        
+
         [Theory]
         [InlineData(int.MaxValue)]
         [InlineData(int.MinValue)]
@@ -46,7 +46,7 @@ namespace BinaryShenanigans.Tests.Writer
                 sizeof(int),
                 value);
         }
-        
+
         [Theory]
         [InlineData(long.MaxValue)]
         [InlineData(long.MinValue)]
@@ -83,7 +83,7 @@ namespace BinaryShenanigans.Tests.Writer
                 sizeof(ushort),
                 value);
         }
-        
+
         [Theory]
         [InlineData(uint.MaxValue)]
         [InlineData(uint.MinValue)]
@@ -101,7 +101,7 @@ namespace BinaryShenanigans.Tests.Writer
                 sizeof(uint),
                 value);
         }
-        
+
         [Theory]
         [InlineData(ulong.MaxValue)]
         [InlineData(ulong.MinValue)]
@@ -119,7 +119,7 @@ namespace BinaryShenanigans.Tests.Writer
                 sizeof(ulong),
                 value);
         }
-        
+
         [Theory]
         [InlineData(double.MaxValue)]
         [InlineData(double.MinValue)]
@@ -129,16 +129,16 @@ namespace BinaryShenanigans.Tests.Writer
         {
             TestBinaryWriterExtension(
                 bw => bw.WriteDoubleBE(value),
-                buffer => BinaryPrimitives.ReadDoubleBigEndian(buffer.AsSpan()),
+                buffer => BinaryPrimitivesMethods.ReadDoubleBigEndian(buffer.AsSpan()),
                 sizeof(double),
                 value);
             TestBinaryWriterExtension(
                 bw => bw.WriteBE(value),
-                buffer => BinaryPrimitives.ReadDoubleBigEndian(buffer.AsSpan()),
+                buffer => BinaryPrimitivesMethods.ReadDoubleBigEndian(buffer.AsSpan()),
                 sizeof(double),
                 value);
         }
-        
+
         [Theory]
         [InlineData(float.MaxValue)]
         [InlineData(float.MinValue)]
@@ -148,16 +148,17 @@ namespace BinaryShenanigans.Tests.Writer
         {
             TestBinaryWriterExtension(
                 bw => bw.WriteSingleBE(value),
-                buffer => BinaryPrimitives.ReadSingleBigEndian(buffer.AsSpan()),
+                buffer => BinaryPrimitivesMethods.ReadSingleBigEndian(buffer.AsSpan()),
                 sizeof(float),
                 value);
             TestBinaryWriterExtension(
                 bw => bw.WriteBE(value),
-                buffer => BinaryPrimitives.ReadSingleBigEndian(buffer.AsSpan()),
+                buffer => BinaryPrimitivesMethods.ReadSingleBigEndian(buffer.AsSpan()),
                 sizeof(float),
                 value);
         }
-        
+
+#if NET6_0_OR_GREATER
         [Fact]
         public void TestWriteHalfBEMaxValue()
         {
@@ -173,7 +174,7 @@ namespace BinaryShenanigans.Tests.Writer
                 sizeof(ushort),
                 value);
         }
-        
+
         [Fact]
         public void TestWriteHalfBEMinValue()
         {
@@ -189,12 +190,13 @@ namespace BinaryShenanigans.Tests.Writer
                 sizeof(ushort),
                 value);
         }
-        
+#endif
+
         private static void TestBinaryWriterExtension<T>(Action<System.IO.BinaryWriter> writeValue, Func<byte[], T> readValue,
             int size, T expectedValue)
         {
             var buffer = new byte[size];
-            
+
             using var ms = new MemoryStream(buffer, 0, size, true, true);
             using var bw = new System.IO.BinaryWriter(ms, Encoding.UTF8, false);
 

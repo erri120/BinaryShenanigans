@@ -14,19 +14,19 @@ namespace BinaryShenanigans.Writer
         private int _pos;
         private readonly int _count;
         private readonly Encoding _encoding;
-        
+
         public bool LittleEndian;
-        
+
         public BufferedWriter(byte[] buffer, int start, int count, Encoding encoding, bool littleEndian = true)
         {
-            _buffer = buffer; 
+            _buffer = buffer;
             _pos = start;
             _count = count;
             _encoding = encoding;
-            
+
             LittleEndian = littleEndian;
         }
-        
+
         public void Write(short value) => Write(value, LittleEndian);
         public void Write(ushort value) => Write(value, LittleEndian);
         public void Write(int value) => Write(value, LittleEndian);
@@ -35,8 +35,10 @@ namespace BinaryShenanigans.Writer
         public void Write(ulong value) => Write(value, LittleEndian);
         public void Write(double value) => Write(value, LittleEndian);
         public void Write(float value) => Write(value, LittleEndian);
+#if NET6_0_OR_GREATER
         public void Write(Half value) => Write(value, LittleEndian);
-        
+#endif
+
         public void WriteLE(short value) => Write(value, true);
         public void WriteLE(ushort value) => Write(value, true);
         public void WriteLE(int value) => Write(value, true);
@@ -45,8 +47,10 @@ namespace BinaryShenanigans.Writer
         public void WriteLE(ulong value) => Write(value, true);
         public void WriteLE(double value) => Write(value, true);
         public void WriteLE(float value) => Write(value, true);
+#if NET6_0_OR_GREATER
         public void WriteLE(Half value) => Write(value, true);
-        
+#endif
+
         public void WriteBE(short value) => Write(value, false);
         public void WriteBE(ushort value) => Write(value, false);
         public void WriteBE(int value) => Write(value, false);
@@ -55,8 +59,10 @@ namespace BinaryShenanigans.Writer
         public void WriteBE(ulong value) => Write(value, false);
         public void WriteBE(double value) => Write(value, false);
         public void WriteBE(float value) => Write(value, false);
+#if NET6_0_OR_GREATER
         public void WriteBE(Half value) => Write(value, false);
-        
+#endif
+
         public void Write(short value, bool littleEndian)
         {
             if (littleEndian)
@@ -64,7 +70,7 @@ namespace BinaryShenanigans.Writer
             else
                 BinaryPrimitives.WriteInt16BigEndian(GetSpan(sizeof(short)), value);
         }
-        
+
         public void Write(int value, bool littleEndian)
         {
             if (littleEndian)
@@ -72,7 +78,7 @@ namespace BinaryShenanigans.Writer
             else
                 BinaryPrimitives.WriteInt32BigEndian(GetSpan(sizeof(int)), value);
         }
-        
+
         public void Write(long value, bool littleEndian)
         {
             if (littleEndian)
@@ -80,7 +86,7 @@ namespace BinaryShenanigans.Writer
             else
                 BinaryPrimitives.WriteInt64BigEndian(GetSpan(sizeof(long)), value);
         }
-        
+
         public void Write(ushort value, bool littleEndian)
         {
             if (littleEndian)
@@ -88,7 +94,7 @@ namespace BinaryShenanigans.Writer
             else
                 BinaryPrimitives.WriteUInt16BigEndian(GetSpan(sizeof(ushort)), value);
         }
-        
+
         public void Write(uint value, bool littleEndian)
         {
             if (littleEndian)
@@ -96,7 +102,7 @@ namespace BinaryShenanigans.Writer
             else
                 BinaryPrimitives.WriteUInt32BigEndian(GetSpan(sizeof(uint)), value);
         }
-        
+
         public void Write(ulong value, bool littleEndian)
         {
             if (littleEndian)
@@ -104,23 +110,24 @@ namespace BinaryShenanigans.Writer
             else
                 BinaryPrimitives.WriteUInt64BigEndian(GetSpan(sizeof(ulong)), value);
         }
-        
+
         public void Write(double value, bool littleEndian)
         {
             if (littleEndian)
-                BinaryPrimitives.WriteDoubleLittleEndian(GetSpan(sizeof(double)), value);
+                BinaryPrimitivesMethods.WriteDoubleLittleEndian(GetSpan(sizeof(double)), value);
             else
-                BinaryPrimitives.WriteDoubleBigEndian(GetSpan(sizeof(double)), value);
+                BinaryPrimitivesMethods.WriteDoubleBigEndian(GetSpan(sizeof(double)), value);
         }
-        
+
         public void Write(float value, bool littleEndian)
         {
             if (littleEndian)
-                BinaryPrimitives.WriteSingleLittleEndian(GetSpan(sizeof(float)), value);
+                BinaryPrimitivesMethods.WriteSingleLittleEndian(GetSpan(sizeof(float)), value);
             else
-                BinaryPrimitives.WriteSingleBigEndian(GetSpan(sizeof(float)), value);
+                BinaryPrimitivesMethods.WriteSingleBigEndian(GetSpan(sizeof(float)), value);
         }
-        
+
+#if NET6_0_OR_GREATER
         public void Write(Half value, bool littleEndian)
         {
             if (littleEndian)
@@ -128,7 +135,8 @@ namespace BinaryShenanigans.Writer
             else
                 BinaryPrimitives.WriteHalfBigEndian(GetSpan(Constants.HalfSize), value);
         }
-        
+#endif
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private Span<byte> GetSpan(int size)
         {
