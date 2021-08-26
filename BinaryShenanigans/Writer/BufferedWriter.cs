@@ -13,16 +13,14 @@ namespace BinaryShenanigans.Writer
         private readonly byte[] _buffer;
         private int _pos;
         private readonly int _count;
-        private readonly Encoding _encoding;
 
         public bool LittleEndian;
 
-        public BufferedWriter(byte[] buffer, int start, int count, Encoding encoding, bool littleEndian = true)
+        public BufferedWriter(byte[] buffer, int start, int count, bool littleEndian = true)
         {
             _buffer = buffer;
             _pos = start;
             _count = count;
-            _encoding = encoding;
 
             LittleEndian = littleEndian;
         }
@@ -136,6 +134,13 @@ namespace BinaryShenanigans.Writer
                 BinaryPrimitives.WriteHalfBigEndian(GetSpan(Constants.HalfSize), value);
         }
 #endif
+
+        public void Write(string value, Encoding encoding)
+        {
+            var bytes = EncodingUtils.ConvertFromCharToByte(value.AsSpan(), encoding);
+            var span = GetSpan(bytes.Length);
+            bytes.CopyTo(span);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private Span<byte> GetSpan(int size)

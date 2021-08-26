@@ -132,10 +132,22 @@ public override void TestWriteInt16(short value, bool littleEndian)
         }
 #endif
 
+        public override void TestWriteString(string value)
+        {
+            var buffer = new byte[Encoding.UTF8.GetByteCount(value.AsSpan())];
+            var writer = new SpanWriter(0, buffer.Length);
+
+            var span = new Span<byte>(buffer, 0, buffer.Length);
+            writer.Write(span, value, Encoding.UTF8);
+
+            var actualValue = EncodingUtils.ConvertFromByteToChar(new ReadOnlySpan<byte>(buffer, 0, buffer.Length), Encoding.UTF8);
+            Assert.Equal(value, actualValue.ToString());
+        }
+
         private static void TestBufferedWriter<T>(int size, bool littleEndian, Action<SpanWriter, byte[]> writeValue, Func<byte[], T> readValue, T expectedValue)
         {
             var buffer = new byte[size];
-            var writer = new SpanWriter(0, size, Encoding.UTF8, littleEndian);
+            var writer = new SpanWriter(0, size, littleEndian);
             writeValue(writer, buffer);
             var actualValue = readValue(buffer);
             Assert.Equal(expectedValue, actualValue);

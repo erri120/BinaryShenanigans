@@ -99,5 +99,10 @@ namespace BinaryShenanigans.Tests.Writer
         [InlineData(false)]
         public abstract void TestWriteHalfMinValue(bool littleEndian);
 #endif
+
+        [Theory]
+        [InlineData("Hello World!")]
+        [InlineData("日本語")]
+        public abstract void TestWriteString(string value);
     }
 }
