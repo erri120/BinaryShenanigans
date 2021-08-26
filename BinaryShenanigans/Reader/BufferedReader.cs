@@ -2,6 +2,7 @@
 using System.Buffers.Binary;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text;
 using JetBrains.Annotations;
 
 namespace BinaryShenanigans.Reader
@@ -107,6 +108,26 @@ namespace BinaryShenanigans.Reader
             ? BinaryPrimitives.ReadHalfLittleEndian(GetSpan(Constants.HalfSize))
             : BinaryPrimitives.ReadHalfBigEndian(GetSpan(Constants.HalfSize));
 #endif
+
+        public ReadOnlySpan<char> ReadString(int charCount, Encoding encoding)
+        {
+            var maxByteCount = encoding.GetMaxByteCount(charCount);
+            var span = GetSpan(Math.Min(_count, maxByteCount));
+            var res = EncodingUtils.ConvertFromByteToChar(span, encoding);
+            return res;
+        }
+
+        public ReadOnlySpan<char> ReadString(Encoding encoding)
+        {
+            var span = new ReadOnlySpan<byte>(_buffer, Position, _count - Position);
+            var index = span.IndexOf((byte)'\0');
+            if (index == -1)
+                throw new EndOfStreamException();
+
+            var slice = span[..index];
+            var res = EncodingUtils.ConvertFromByteToChar(slice, encoding);
+            return res;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private ReadOnlySpan<byte> GetSpan(int size)

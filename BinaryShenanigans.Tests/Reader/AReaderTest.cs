@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Text;
+using Xunit;
 
 namespace BinaryShenanigans.Tests.Reader
 {
@@ -99,5 +100,15 @@ namespace BinaryShenanigans.Tests.Reader
         [InlineData(false)]
         public abstract void TestReadHalfMinValue(bool littleEndian);
 #endif
+
+        [Theory]
+        [InlineData("Hello World!")]
+        [InlineData("日本語")]
+        public abstract void TestReadString(string value);
+
+        [Theory]
+        [InlineData("Hello World!\0")]
+        [InlineData("日本語\0")]
+        public abstract void TestReadStringNullTerminated(string value);
     }
 }

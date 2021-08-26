@@ -132,6 +132,22 @@ namespace BinaryShenanigans.Tests.Reader
         }
 #endif
 
+        public override void TestReadString(string value)
+        {
+            var bytes = EncodingUtils.ConvertFromCharToByte(value.AsSpan(), Encoding.UTF8);
+            var spanReader = new SpanReader(0, bytes.Length);
+            var actualValue = spanReader.ReadString(bytes, value.Length, Encoding.UTF8);
+            Assert.Equal(value, actualValue.ToString());
+        }
+
+        public override void TestReadStringNullTerminated(string value)
+        {
+            var bytes = EncodingUtils.ConvertFromCharToByte(value.AsSpan(), Encoding.UTF8);
+            var spanReader = new SpanReader(0, bytes.Length);
+            var actualValue = spanReader.ReadString(bytes, Encoding.UTF8);
+            Assert.Equal(value[..^1], actualValue.ToString());
+        }
+
         private static void TestSpanReader<T>(Span<byte> span, Action writeValue,
             bool littleEndian, Func<SpanReader, T> readValue, T expectedValue)
         {

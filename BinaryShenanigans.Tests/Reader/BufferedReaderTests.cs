@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers.Binary;
+using System.Text;
 using BinaryShenanigans.Reader;
 using Xunit;
 
@@ -130,6 +131,26 @@ namespace BinaryShenanigans.Tests.Reader
                 reader => reader.ReadHalf());
         }
 #endif
+
+        public override void TestReadString(string value)
+        {
+            var span = EncodingUtils.ConvertFromCharToByte(value.AsSpan(), Encoding.UTF8);
+            var buffer = span.ToArray();
+
+            var reader = new BufferedReader(buffer, 0, buffer.Length);
+            var actualValue = reader.ReadString(value.Length, Encoding.UTF8);
+            Assert.Equal(value, actualValue.ToString());
+        }
+
+        public override void TestReadStringNullTerminated(string value)
+        {
+            var span = EncodingUtils.ConvertFromCharToByte(value.AsSpan(), Encoding.UTF8);
+            var buffer = span.ToArray();
+
+            var reader = new BufferedReader(buffer, 0, buffer.Length);
+            var actualValue = reader.ReadString(Encoding.UTF8);
+            Assert.Equal(value[..^1], actualValue.ToString());
+        }
 
         private static void TestBufferedReader<T>(int size, Action<byte[]> writeValue, bool littleEndian,
             T expectedValue, Func<BufferedReader, T> readFunc)
