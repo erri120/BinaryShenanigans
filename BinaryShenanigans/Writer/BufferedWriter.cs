@@ -143,6 +143,43 @@ namespace BinaryShenanigans.Writer
             bytes.CopyTo(span);
         }
 
+        public void Write(byte[] data)
+        {
+            var span = GetSpan(data.Length);
+            data.CopyTo(span);
+        }
+
+        public void Write(ArraySegment<byte> data)
+        {
+            var span = GetSpan(data.Count);
+            var dataSpan = new ReadOnlySpan<byte>(data.Array, data.Offset, data.Count);
+            dataSpan.CopyTo(span);
+        }
+
+        public void Write(Span<byte> data)
+        {
+            var span = GetSpan(data.Length);
+            data.CopyTo(span);
+        }
+
+        public void Write(ReadOnlySpan<byte> data)
+        {
+            var span = GetSpan(data.Length);
+            data.CopyTo(span);
+        }
+
+        public void Write(Memory<byte> data)
+        {
+            var span = GetSpan(data.Length);
+            data.Span.CopyTo(span);
+        }
+
+        public void Write(ReadOnlyMemory<byte> data)
+        {
+            var span = GetSpan(data.Length);
+            data.Span.CopyTo(span);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private Span<byte> GetSpan(int size)
         {

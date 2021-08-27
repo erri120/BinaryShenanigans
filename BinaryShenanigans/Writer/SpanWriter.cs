@@ -141,6 +141,43 @@ namespace BinaryShenanigans.Writer
             bytes.CopyTo(slice);
         }
 
+        public void Write(Span<byte> span, byte[] data)
+        {
+            var slice = GetSlice(span, data.Length);
+            data.CopyTo(slice);
+        }
+
+        public void Write(Span<byte> span, ArraySegment<byte> data)
+        {
+            var slice = GetSlice(span, data.Count);
+            var dataSpan = new ReadOnlySpan<byte>(data.Array, data.Offset, data.Count);
+            dataSpan.CopyTo(slice);
+        }
+
+        public void Write(Span<byte> span, Span<byte> data)
+        {
+            var slice = GetSlice(span, data.Length);
+            data.CopyTo(slice);
+        }
+
+        public void Write(Span<byte> span, ReadOnlySpan<byte> data)
+        {
+            var slice = GetSlice(span, data.Length);
+            data.CopyTo(slice);
+        }
+
+        public void Write(Span<byte> span, Memory<byte> data)
+        {
+            var slice = GetSlice(span, data.Length);
+            data.Span.CopyTo(slice);
+        }
+
+        public void Write(Span<byte> span, ReadOnlyMemory<byte> data)
+        {
+            var slice = GetSlice(span, data.Length);
+            data.Span.CopyTo(slice);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private Span<byte> GetSlice(Span<byte> span, int size)
         {
