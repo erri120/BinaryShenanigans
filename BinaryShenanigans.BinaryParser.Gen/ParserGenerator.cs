@@ -1,11 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Linq.Expressions;
+﻿using System.IO;
 using System.Reflection;
 using System.Text;
 using BinaryShenanigans.BinaryParser.Interfaces;
-using BinaryShenanigans.BinaryParser.Steps;
-using BinaryShenanigans.Reader;
 using Spectre.Console;
 
 namespace BinaryShenanigans.BinaryParser.Gen
@@ -31,15 +27,17 @@ namespace {projectName}.Generated
         public {baseType.FullName} Parse(byte[] data)
         {{
             var res = new {baseType.FullName}();
-            var spanReader = new SpanReader(0, data.Length);
-            var span = new ReadOnlySpan<byte>(data, 0, data.Length);");
+            var reader = new SpanReader(0, data.Length);
+            var span = new ReadOnlySpan<byte>(data, 0, data.Length);
+");
 
             foreach (var step in binaryParserBuilder.Steps)
             {
-                WriteStepCode(sb, step);
+                step.WriteCode(sb);
             }
 
             sb.Append(@"
+
             return res;
         }
     }
@@ -59,51 +57,6 @@ namespace {projectName}.Generated
 
             File.WriteAllText(outputFile, sb.ToString(), Encoding.UTF8);
             return true;
-        }
-
-        private static void WriteStepCode(StringBuilder sb, AStep step)
-        {
-            switch (step.StepType)
-            {
-                case StepType.ReadNumerics:
-                    WriteReadNumericsStep(sb, (ReadNumericsStep)step);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private static void WriteReadNumericsStep(StringBuilder sb, ReadNumericsStep step)
-        {
-            var expression = step.Expression;
-            if (expression.NodeType != ExpressionType.Lambda)
-                throw new NotImplementedException();
-
-            var lambdaExpression = (LambdaExpression)expression;
-            var lambdaBody = lambdaExpression.Body;
-
-            if (lambdaBody.NodeType != ExpressionType.MemberAccess)
-                throw new NotImplementedException();
-
-            var memberExpression = (MemberExpression)lambdaBody;
-            var memberName = memberExpression.Member.Name;
-
-            var readerFunction = step.NumericType switch
-            {
-                NumericType.Int16 => nameof(SpanReader.ReadInt16),
-                NumericType.UInt16 => nameof(SpanReader.ReadUInt16),
-                NumericType.Int32 => nameof(SpanReader.ReadInt32),
-                NumericType.UInt32 => nameof(SpanReader.ReadUInt16),
-                NumericType.Int64 => nameof(SpanReader.ReadInt64),
-                NumericType.UInt64 => nameof(SpanReader.ReadUInt16),
-                NumericType.Single => nameof(SpanReader.ReadSingle),
-                NumericType.Double => nameof(SpanReader.ReadDouble),
-                NumericType.Half => nameof(SpanReader.ReadHalf),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
-            sb.Append($@"
-            res.{memberName} = spanReader.{readerFunction}(span, {(step.LittleEndian ? "true" : "false")});");
         }
     }
 }

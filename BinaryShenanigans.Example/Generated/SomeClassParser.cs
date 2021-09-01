@@ -9,10 +9,19 @@ namespace BinaryShenanigans.Example.Generated
         public BinaryShenanigans.Example.SomeClass Parse(byte[] data)
         {
             var res = new BinaryShenanigans.Example.SomeClass();
-            var spanReader = new SpanReader(0, data.Length);
+            var reader = new SpanReader(0, data.Length);
             var span = new ReadOnlySpan<byte>(data, 0, data.Length);
-            res.UInt32Property = spanReader.ReadUInt16(span, true);
-            res.Int32Field = spanReader.ReadInt32(span, true);
+
+            res.Int16Value = reader.ReadInt16(span, true);
+            res.UInt16Value = reader.ReadUInt16(span, true);
+            res.Int32Value = reader.ReadInt32(span, true);
+            res.UInt32Value = reader.ReadUInt16(span, true);
+            res.Int64Value = reader.ReadInt64(span, true);
+            res.UInt64Value = reader.ReadUInt16(span, true);
+            res.DoubleValue = reader.ReadDouble(span, true);
+            res.SingleValue = reader.ReadSingle(span, true);
+            res.HalfValue = reader.ReadHalf(span, true);
+
             return res;
         }
     }

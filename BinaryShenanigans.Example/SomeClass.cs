@@ -1,12 +1,24 @@
-﻿using BinaryShenanigans.BinaryParser;
+﻿using System;
+using BinaryShenanigans.BinaryParser;
 using BinaryShenanigans.BinaryParser.Interfaces;
 
 namespace BinaryShenanigans.Example
 {
     public class SomeClass
     {
-        public uint UInt32Property { get; set; }
-        public int Int32Field;
+        #region Numbers
+
+        public short Int16Value { get; set; }
+        public ushort UInt16Value { get; set; }
+        public int Int32Value { get; set; }
+        public uint UInt32Value { get; set; }
+        public long Int64Value { get; set; }
+        public ulong UInt64Value { get; set; }
+        public double DoubleValue { get; set; }
+        public float SingleValue { get; set; }
+        public Half HalfValue { get; set; }
+
+        #endregion
     }
 
     public class SomeClassConfiguration : IBinaryParserConfiguration<SomeClass>
@@ -14,8 +26,15 @@ namespace BinaryShenanigans.Example
         public IBinaryParserBuilder<SomeClass> Configure()
         {
             return BinaryParserBuilder.Configure<SomeClass>()
-                .ReadUInt32(x => x.UInt32Property)
-                .ReadInt32(x => x.Int32Field);
+                .ReadInt16(x => x.Int16Value)
+                .ReadUInt16(x => x.UInt16Value)
+                .ReadInt32(x => x.Int32Value)
+                .ReadUInt32(x => x.UInt32Value)
+                .ReadInt64(x => x.Int64Value)
+                .ReadUInt64(x => x.UInt64Value)
+                .ReadDouble(x => x.DoubleValue)
+                .ReadSingle(x => x.SingleValue)
+                .ReadHalf(x => x.HalfValue);
         }
     }
 }
