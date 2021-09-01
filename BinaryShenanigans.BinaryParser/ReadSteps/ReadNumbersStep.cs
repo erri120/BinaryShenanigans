@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using System.Text;
 using BinaryShenanigans.Reader;
+using CodeWriterUtils;
 
 namespace BinaryShenanigans.BinaryParser.ReadSteps
 {
@@ -18,7 +19,7 @@ namespace BinaryShenanigans.BinaryParser.ReadSteps
             _littleEndian = littleEndian;
         }
 
-        public override void WriteCode(StringBuilder sb)
+        public override void WriteCode(CodeWriter codeWriter)
         {
             var memberInfo = ExpressionUtils.GetMemberInfoFromExpression(_expression);
             if (memberInfo == null)
@@ -39,8 +40,7 @@ namespace BinaryShenanigans.BinaryParser.ReadSteps
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-            sb.Append($@"
-            res.{memberName} = reader.{readerFunction}(span, {(_littleEndian ? "true" : "false")});");
+            codeWriter.WriteLine($"res.{memberName} = reader.{readerFunction}(span, {(_littleEndian ? "true" : "false")});");
         }
     }
 

@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Text;
 using BinaryShenanigans.BinaryParser.Interfaces;
 using BinaryShenanigans.BinaryParser.ReadSteps;
+using CodeWriterUtils;
 using JetBrains.Annotations;
 
 namespace BinaryShenanigans.BinaryParser
@@ -19,11 +20,11 @@ namespace BinaryShenanigans.BinaryParser
         public abstract Type Type { get; }
         public abstract List<AReadStep> Steps { get; }
 
-        public void WriteCode(StringBuilder sb)
+        public void WriteCode(CodeWriter codeWriter)
         {
             foreach (var step in Steps)
             {
-                step.WriteCode(sb);
+                step.WriteCode(codeWriter);
             }
         }
     }

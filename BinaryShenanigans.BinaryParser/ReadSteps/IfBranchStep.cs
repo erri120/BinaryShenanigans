@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Text;
+using CodeWriterUtils;
 
 namespace BinaryShenanigans.BinaryParser.ReadSteps
 {
@@ -16,7 +17,7 @@ namespace BinaryShenanigans.BinaryParser.ReadSteps
             _conditionalExpression = conditionalExpression;
         }
 
-        public override void WriteCode(StringBuilder sb)
+        public override void WriteCode(CodeWriter codeWriter)
         {
             if (_conditionalExpression.NodeType != ExpressionType.Lambda)
                 throw new NotImplementedException();
@@ -25,23 +26,15 @@ namespace BinaryShenanigans.BinaryParser.ReadSteps
             var lambdaExpression = (LambdaExpression)_conditionalExpression;
             var bodyString = lambdaExpression.Body.ToString().Replace(lambdaExpression.Parameters[0].Name!, "res");
 
-            sb.Append(@$"
-
-            if ({bodyString})
-            {{");
-
-            WhenTrueBuilder?.WriteCode(sb);
-
-            sb.Append(@"
+            using (codeWriter.UseBrackets($"if ({bodyString})"))
+            {
+                WhenTrueBuilder?.WriteCode(codeWriter);
             }
-            else
-            {");
 
-            WhenFalseBuilder?.WriteCode(sb);
-
-            sb.Append(@"
+            using (codeWriter.UseBrackets("else"))
+            {
+                WhenFalseBuilder?.WriteCode(codeWriter);
             }
-");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using BinaryShenanigans.Reader;
+using CodeWriterUtils;
 
 namespace BinaryShenanigans.BinaryParser.ReadSteps
 {
@@ -12,10 +13,9 @@ namespace BinaryShenanigans.BinaryParser.ReadSteps
             _count = count;
         }
 
-        public override void WriteCode(StringBuilder sb)
+        public override void WriteCode(CodeWriter codeWriter)
         {
-            sb.Append(@$"
-            reader.{nameof(SpanReader.SkipBytes)}({_count});");
+            codeWriter.WriteLine($"reader.{nameof(SpanReader.SkipBytes)}({_count});");
         }
     }
 }

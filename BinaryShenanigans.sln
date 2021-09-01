@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryShenanigans.BinaryPar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryShenanigans.Example", "BinaryShenanigans.Example\BinaryShenanigans.Example.csproj", "{7EA2F123-82CE-4654-A8F8-B76060093CA3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeWriterUtils", "libs\CodeWriterUtils\CodeWriterUtils\CodeWriterUtils.csproj", "{582B3111-D3A0-481D-96F7-762226471F22}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,5 +53,9 @@ Global
 		{7EA2F123-82CE-4654-A8F8-B76060093CA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EA2F123-82CE-4654-A8F8-B76060093CA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EA2F123-82CE-4654-A8F8-B76060093CA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{582B3111-D3A0-481D-96F7-762226471F22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{582B3111-D3A0-481D-96F7-762226471F22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{582B3111-D3A0-481D-96F7-762226471F22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{582B3111-D3A0-481D-96F7-762226471F22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

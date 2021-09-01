@@ -7,6 +7,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BinaryShenanigans\BinaryShenanigans.csproj" />
+      <ProjectReference Include="..\libs\CodeWriterUtils\CodeWriterUtils\CodeWriterUtils.csproj" />
     </ItemGroup>
 
     <ItemGroup>
