@@ -25,11 +25,11 @@ namespace BinaryShenanigans.BinaryParser.Gen.Commands
             if (!File.Exists(projectPath))
                 throw new Exception($"File does not exist: \"{projectPath}\"");
 
-            //var buildResult = NukeUtils.BuildProject(projectPath);
-            //var assemblyLocation = buildResult.AssemblyLocation;
-            //var projectName = buildResult.ProjectName;
-            const string assemblyLocation = "E:\\Projects\\BinaryShenanigans\\BinaryShenanigans.Example\\bin\\Debug\\net6.0\\BinaryShenanigans.Example.dll";
-            const string projectName = "BinaryShenanigans.Example";
+            var buildResult = NukeUtils.BuildProject(projectPath);
+            var assemblyLocation = buildResult.AssemblyLocation;
+            var projectName = buildResult.ProjectName;
+            //const string assemblyLocation = "E:\\Projects\\BinaryShenanigans\\BinaryShenanigans.Example\\bin\\Debug\\net6.0\\BinaryShenanigans.Example.dll";
+            //const string projectName = "BinaryShenanigans.Example";
 
             if (!File.Exists(assemblyLocation))
                 throw new Exception($"Output Assembly does not exist at {assemblyLocation}");

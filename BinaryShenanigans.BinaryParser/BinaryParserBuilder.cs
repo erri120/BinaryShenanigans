@@ -18,15 +18,32 @@ namespace BinaryShenanigans.BinaryParser
     {
         public abstract Type Type { get; }
         public abstract List<AReadStep> Steps { get; }
+
+        public void WriteCode(StringBuilder sb)
+        {
+            foreach (var step in Steps)
+            {
+                step.WriteCode(sb);
+            }
+        }
     }
 
     [PublicAPI]
-    internal partial class BinaryParserBuilder<T> : ABinaryParserBuilder, IBinaryParserBuilderIfBranch<T>, IBinaryParserBuilderWithConditionBranch<T>, IBinaryParserBuilderIfBranchWhenTruePath<T>, IBinaryParserBuilderIfBranchWhenFalsePath<T>
+    internal partial class BinaryParserBuilder<T> : ABinaryParserBuilder, IBinaryParserBuilder<T>, IBinaryParserBuilderWithConditionBranch<T>
     {
         public override Type Type => typeof(T);
 
         private readonly List<AReadStep> _steps = new();
         public override List<AReadStep> Steps => _steps;
+
+        private readonly BinaryParserBuilder<T>? _parent;
+
+        public BinaryParserBuilder() { }
+
+        public BinaryParserBuilder(BinaryParserBuilder<T> parent)
+        {
+            _parent = parent;
+        }
 
         public IBinaryParserBuilder<T> SkipBytes(ulong count)
         {

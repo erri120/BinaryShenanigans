@@ -14,7 +14,8 @@ namespace BinaryShenanigans.BinaryParser.ReadSteps
 
         public override void WriteCode(StringBuilder sb)
         {
-            sb.Append($"reader.{nameof(SpanReader.SkipBytes)}({_count});");
+            sb.Append(@$"
+            reader.{nameof(SpanReader.SkipBytes)}({_count});");
         }
     }
 }

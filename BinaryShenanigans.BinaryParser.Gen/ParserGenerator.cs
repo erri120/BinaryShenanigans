@@ -30,12 +30,7 @@ namespace {projectName}.Generated
             var reader = new SpanReader(0, data.Length);
             var span = new ReadOnlySpan<byte>(data, 0, data.Length);
 ");
-
-            foreach (var step in binaryParserBuilder.Steps)
-            {
-                step.WriteCode(sb);
-            }
-
+            binaryParserBuilder.WriteCode(sb);
             sb.Append(@"
 
             return res;

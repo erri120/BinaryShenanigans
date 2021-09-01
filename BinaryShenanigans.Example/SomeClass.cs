@@ -34,7 +34,11 @@ namespace BinaryShenanigans.Example
                 .ReadUInt64(x => x.UInt64Value)
                 .ReadDouble(x => x.DoubleValue)
                 .ReadSingle(x => x.SingleValue)
-                .ReadHalf(x => x.HalfValue);
+                .ReadHalf(x => x.HalfValue)
+                .SkipBytes(8)
+                .If(x => x.Int32Value.Equals(1377))
+                    .WhenTrue(b => b.ReadInt64(x => x.Int64Value, true))
+                    .WhenFalse(b => b.ReadUInt64(x => x.UInt64Value, true));
         }
     }
 }

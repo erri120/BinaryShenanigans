@@ -7,8 +7,6 @@ namespace BinaryShenanigans.BinaryParser.Interfaces
     [PublicAPI]
     public interface IBinaryParserBuilder<T>
     {
-        //IBinaryParser<T> CreateParser();
-
         #region Logic
 
         IBinaryParserBuilderIfBranch<T> If(Expression<Func<T, bool>> expression);
