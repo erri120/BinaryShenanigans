@@ -40,21 +40,21 @@ namespace BinaryShenanigans.BinaryParser
             return this;
         }
 
-        public IBinaryParserBuilderIfBranchWhenTruePath<T> WhenTrue(Expression<Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>>> expression)
+        public IBinaryParserBuilderIfBranchWhenTruePath<T> WhenTrue(Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>> func)
         {
-            SetWhenTrue(expression);
+            SetWhenTrue(func);
             return this;
         }
 
-        public IBinaryParserBuilderIfBranchWhenFalsePath<T> WhenFalse(Expression<Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>>> expression)
+        public IBinaryParserBuilderIfBranchWhenFalsePath<T> WhenFalse(Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>> func)
         {
-            SetWhenFalse(expression);
+            SetWhenFalse(func);
             return this;
         }
 
-        IBinaryParserBuilder<T> IBinaryParserBuilderIfBranchWhenTrueEmptyPath<T>.WhenFalse(Expression<Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>>> expression)
+        IBinaryParserBuilder<T> IBinaryParserBuilderIfBranchWhenTrueEmptyPath<T>.WhenFalse(Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>> func)
         {
-            SetWhenFalse(expression);
+            SetWhenFalse(func);
             return _parentBuilder;
         }
 
@@ -64,9 +64,9 @@ namespace BinaryShenanigans.BinaryParser
             return _parentBuilder;
         }
 
-        IBinaryParserBuilder<T> IBinaryParserBuilderIfBranchWhenFalseEmptyPath<T>.WhenTrue(Expression<Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>>> expression)
+        IBinaryParserBuilder<T> IBinaryParserBuilderIfBranchWhenFalseEmptyPath<T>.WhenTrue(Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>> func)
         {
-            SetWhenTrue(expression);
+            SetWhenTrue(func);
             return _parentBuilder;
         }
 
@@ -76,16 +76,14 @@ namespace BinaryShenanigans.BinaryParser
             return _parentBuilder;
         }
 
-        private void SetWhenFalse(Expression<Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>>> expression)
+        private void SetWhenFalse(Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>> func)
         {
-            var func = expression.Compile();
             var whenFalseBuilder = new BinaryParserBuilder<T>();
             _ifBranchStep.WhenFalseBuilder = (ABinaryParserBuilder)func(whenFalseBuilder);
         }
 
-        private void SetWhenTrue(Expression<Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>>> expression)
+        private void SetWhenTrue(Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>> func)
         {
-            var func = expression.Compile();
             var whenTrueBuilder = new BinaryParserBuilder<T>();
             _ifBranchStep.WhenTrueBuilder = (ABinaryParserBuilder)func(whenTrueBuilder);
         }

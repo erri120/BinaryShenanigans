@@ -10,6 +10,7 @@ namespace BinaryShenanigans.Example.Generated
             var res = new BinaryShenanigans.Example.SomeClass();
             var reader = new SpanReader(0, data.Length);
             var span = new ReadOnlySpan<byte>(data, 0, data.Length);
+
             res.Int16Value = reader.ReadInt16(span, true);
             res.UInt16Value = reader.ReadUInt16(span, true);
             res.Int32Value = reader.ReadInt32(span, true);
@@ -20,6 +21,7 @@ namespace BinaryShenanigans.Example.Generated
             res.SingleValue = reader.ReadSingle(span, true);
             res.HalfValue = reader.ReadHalf(span, true);
             reader.SkipBytes(8);
+
             if (res.Int32Value.Equals(1377))
             {
                 res.Int64Value = reader.ReadInt64(span, true);
@@ -28,6 +30,7 @@ namespace BinaryShenanigans.Example.Generated
             {
                 res.UInt64Value = reader.ReadUInt16(span, true);
             }
+
             return res;
         }
     }

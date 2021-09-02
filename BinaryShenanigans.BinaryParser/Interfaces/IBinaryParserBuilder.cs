@@ -11,9 +11,6 @@ namespace BinaryShenanigans.BinaryParser.Interfaces
 
         IBinaryParserBuilderIfBranch<T> If(Expression<Func<T, bool>> expression);
 
-        IBinaryParserBuilderWithConditionBranch<T> WithCondition(Expression<Func<T, bool>> conditionExpression,
-            Expression<Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>>> conditionMetExpression);
-
         #endregion
 
         #region Skips

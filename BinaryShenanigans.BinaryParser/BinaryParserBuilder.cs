@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 using BinaryShenanigans.BinaryParser.Interfaces;
 using BinaryShenanigans.BinaryParser.ReadSteps;
 using CodeWriterUtils;
@@ -30,7 +28,7 @@ namespace BinaryShenanigans.BinaryParser
     }
 
     [PublicAPI]
-    internal partial class BinaryParserBuilder<T> : ABinaryParserBuilder, IBinaryParserBuilder<T>, IBinaryParserBuilderWithConditionBranch<T>
+    internal partial class BinaryParserBuilder<T> : ABinaryParserBuilder, IBinaryParserBuilder<T>
     {
         public override Type Type => typeof(T);
 
@@ -49,12 +47,6 @@ namespace BinaryShenanigans.BinaryParser
         public IBinaryParserBuilder<T> SkipBytes(ulong count)
         {
             _steps.Add(new SkipBytesStep(count));
-            return this;
-        }
-
-        public IBinaryParserBuilderWithConditionBranch<T> WithCondition(Expression<Func<T, bool>> conditionExpression, Expression<Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>>> conditionMetExpression)
-        {
-            // TODO:
             return this;
         }
     }

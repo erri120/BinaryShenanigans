@@ -9,8 +9,8 @@ namespace BinaryShenanigans.BinaryParser.Interfaces
     {
         IBinaryParserBuilderIfBranchWhenTrueEmptyPath<T> WhenTrue();
         IBinaryParserBuilderIfBranchWhenFalseEmptyPath<T> WhenFalse();
-        IBinaryParserBuilderIfBranchWhenTruePath<T> WhenTrue(Expression<Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>>> expression);
-        IBinaryParserBuilderIfBranchWhenFalsePath<T> WhenFalse(Expression<Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>>> expression);
+        IBinaryParserBuilderIfBranchWhenTruePath<T> WhenTrue(Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>> func);
+        IBinaryParserBuilderIfBranchWhenFalsePath<T> WhenFalse(Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>> func);
     }
 
     [PublicAPI]
@@ -28,12 +28,12 @@ namespace BinaryShenanigans.BinaryParser.Interfaces
     [PublicAPI]
     public interface IBinaryParserBuilderIfBranchWhenTrueEmptyPath<T>
     {
-        IBinaryParserBuilder<T> WhenFalse(Expression<Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>>> expression);
+        IBinaryParserBuilder<T> WhenFalse(Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>> func);
     }
-    
+
     [PublicAPI]
     public interface IBinaryParserBuilderIfBranchWhenFalseEmptyPath<T>
     {
-        IBinaryParserBuilder<T> WhenTrue(Expression<Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>>> expression);
+        IBinaryParserBuilder<T> WhenTrue(Func<IBinaryParserBuilder<T>, IBinaryParserBuilder<T>> func);
     }
 }

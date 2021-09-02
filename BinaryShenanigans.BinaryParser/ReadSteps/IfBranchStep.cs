@@ -26,6 +26,7 @@ namespace BinaryShenanigans.BinaryParser.ReadSteps
             var lambdaExpression = (LambdaExpression)_conditionalExpression;
             var bodyString = lambdaExpression.Body.ToString().Replace(lambdaExpression.Parameters[0].Name!, "res");
 
+            codeWriter.WriteNewLine();
             using (codeWriter.UseBrackets($"if ({bodyString})"))
             {
                 WhenTrueBuilder?.WriteCode(codeWriter);
