@@ -21,6 +21,8 @@ namespace BinaryShenanigans.BinaryParser.Interfaces
 
         #region Read Functions
 
+        IBinaryParserBuilder<T> ReadOther<TOther>(Expression<Func<T, TOther>> expression, Type otherConfigurationType);
+
         #region Numerics
 
         IBinaryParserBuilder<T> ReadInt16(Expression<Func<T, short>> expression, bool littleEndian = true);

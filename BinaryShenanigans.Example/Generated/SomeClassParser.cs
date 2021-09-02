@@ -1,15 +1,15 @@
 ﻿using System;
 using BinaryShenanigans.BinaryParser.Interfaces;
 using BinaryShenanigans.Reader;
+
 namespace BinaryShenanigans.Example.Generated
 {
     public class SomeClassParser : IBinaryParser<BinaryShenanigans.Example.SomeClass>
     {
-        public BinaryShenanigans.Example.SomeClass Parse(byte[] data)
+        public static BinaryShenanigans.Example.SomeClass ParseStatic(ReadOnlySpan<byte> span)
         {
             var res = new BinaryShenanigans.Example.SomeClass();
-            var reader = new SpanReader(0, data.Length);
-            var span = new ReadOnlySpan<byte>(data, 0, data.Length);
+            var reader = new SpanReader(0, span.Length);
 
             res.Int16Value = reader.ReadInt16(span, true);
             res.UInt16Value = reader.ReadUInt16(span, true);
@@ -30,8 +30,11 @@ namespace BinaryShenanigans.Example.Generated
             {
                 res.UInt64Value = reader.ReadUInt16(span, true);
             }
+            res.AnotherClass = AnotherClassParser.ParseStatic(span.Slice(reader.Position));
 
             return res;
         }
+
+        public BinaryShenanigans.Example.SomeClass Parse(ReadOnlySpan<byte> span) => ParseStatic(span);
     }
 }

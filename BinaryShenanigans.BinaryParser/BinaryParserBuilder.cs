@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using BinaryShenanigans.BinaryParser.Interfaces;
 using BinaryShenanigans.BinaryParser.ReadSteps;
 using CodeWriterUtils;
@@ -47,6 +48,12 @@ namespace BinaryShenanigans.BinaryParser
         public IBinaryParserBuilder<T> SkipBytes(ulong count)
         {
             _steps.Add(new SkipBytesStep(count));
+            return this;
+        }
+
+        public IBinaryParserBuilder<T> ReadOther<TOther>(Expression<Func<T, TOther>> expression, Type otherConfigurationType)
+        {
+            _steps.Add(new ReadOtherStep(expression, otherConfigurationType));
             return this;
         }
     }

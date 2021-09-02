@@ -21,16 +21,16 @@ namespace BinaryShenanigans.BinaryParser.Gen
             codeWriter.WriteLine("using System;");
             codeWriter.WriteLine("using BinaryShenanigans.BinaryParser.Interfaces;");
             codeWriter.WriteLine("using BinaryShenanigans.Reader;");
+            codeWriter.WriteNewLine();
 
             using (codeWriter.UseBrackets($"namespace {projectName}.Generated"))
             {
                 using (codeWriter.UseBrackets($"public class {baseType.Name}Parser : IBinaryParser<{baseType.FullName}>"))
                 {
-                    using (codeWriter.UseBrackets($"public {baseType.FullName} Parse(byte[] data)"))
+                    using (codeWriter.UseBrackets($"public static {baseType.FullName} ParseStatic(ReadOnlySpan<byte> span)"))
                     {
                         codeWriter.WriteLine($"var res = new {baseType.FullName}();");
-                        codeWriter.WriteLine("var reader = new SpanReader(0, data.Length);");
-                        codeWriter.WriteLine("var span = new ReadOnlySpan<byte>(data, 0, data.Length);");
+                        codeWriter.WriteLine("var reader = new SpanReader(0, span.Length);");
                         codeWriter.WriteNewLine();
 
                         binaryParserBuilder.WriteCode(codeWriter);
@@ -38,6 +38,9 @@ namespace BinaryShenanigans.BinaryParser.Gen
                         codeWriter.WriteNewLine();
                         codeWriter.WriteLine("return res;");
                     }
+
+                    codeWriter.WriteNewLine();
+                    codeWriter.WriteLine($"public {baseType.FullName} Parse(ReadOnlySpan<byte> span) => ParseStatic(span);");
                 }
             }
 
