@@ -39,10 +39,22 @@ namespace BinaryShenanigans.Example
                 .ReadSingle(x => x.SingleValue)
                 .ReadHalf(x => x.HalfValue)
                 .SkipBytes(8)
+                .If(x => x.Int16Value == 1 && x.Int32Value == 2)
+                    .WhenTrue()
+                    .WhenFalse(b => b.ReadHalf(x => x.HalfValue))
+                .If(x => x.Int16Value == 1 || x.Int32Value == 2)
+                    .WhenTrue()
+                    .WhenFalse(b => b.ReadHalf(x => x.HalfValue))
                 .If(x => x.Int32Value.Equals(1377))
                     .WhenTrue(b => b.ReadInt64(x => x.Int64Value))
                     .WhenFalse(b => b.ReadUInt64(x => x.UInt64Value))
-                .ReadOther(x => x.AnotherClass, typeof(AnotherClassConfiguration));
+                .ReadOther(x => x.AnotherClass, typeof(AnotherClassConfiguration))
+                .If(x => x.Int32Value == 1337)
+                    .WhenTrue(b => b.ReadInt16(x => x.Int16Value))
+                    .WhenFalse()
+                .If(x => x.Int16Value == x.Int32Value)
+                    .WhenTrue()
+                    .WhenFalse(b => b.ReadHalf(x => x.HalfValue));
         }
     }
 

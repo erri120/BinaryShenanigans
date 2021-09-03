@@ -22,6 +22,16 @@ namespace BinaryShenanigans.Example.Generated
             res.HalfValue = reader.ReadHalf(span, true);
             reader.SkipBytes(8);
 
+            if (!((res.Int16Value == 1) && (res.Int32Value == 2)))
+            {
+                res.HalfValue = reader.ReadHalf(span, true);
+            }
+
+            if (!((res.Int16Value == 1) || (res.Int32Value == 2)))
+            {
+                res.HalfValue = reader.ReadHalf(span, true);
+            }
+
             if (res.Int32Value.Equals(1377))
             {
                 res.Int64Value = reader.ReadInt64(span, true);
@@ -31,6 +41,16 @@ namespace BinaryShenanigans.Example.Generated
                 res.UInt64Value = reader.ReadUInt16(span, true);
             }
             res.AnotherClass = AnotherClassParser.ParseStatic(span.Slice(reader.Position));
+
+            if (res.Int32Value == 1337)
+            {
+                res.Int16Value = reader.ReadInt16(span, true);
+            }
+
+            if (!(res.Int16Value == res.Int32Value))
+            {
+                res.HalfValue = reader.ReadHalf(span, true);
+            }
 
             return res;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using CodeWriterUtils;
@@ -22,19 +23,60 @@ namespace BinaryShenanigans.BinaryParser.ReadSteps
             if (_conditionalExpression.NodeType != ExpressionType.Lambda)
                 throw new NotImplementedException();
 
-            // TODO: find a better way to extract the condition
             var lambdaExpression = (LambdaExpression)_conditionalExpression;
-            var bodyString = lambdaExpression.Body.ToString().Replace(lambdaExpression.Parameters[0].Name!, "res");
+            var lambdaBody = lambdaExpression.Body;
+            var evaluationString = "false";
 
-            codeWriter.WriteNewLine();
-            using (codeWriter.UseBrackets($"if ({bodyString})"))
+            if (lambdaBody is MethodCallExpression methodCallExpression)
             {
-                WhenTrueBuilder?.WriteCode(codeWriter);
+                if (methodCallExpression.Type != typeof(bool))
+                    throw new NotImplementedException();
+
+                if (methodCallExpression.Object == null)
+                    throw new NotImplementedException();
+
+                if (methodCallExpression.Object is not MemberExpression memberExpression)
+                    throw new NotImplementedException();
+
+                var memberInfo = memberExpression.Member;
+                var methodInfo = methodCallExpression.Method;
+                var arguments = methodCallExpression.Arguments
+                    .Select(x => x.ToString())
+                    .Aggregate((x, y) => $"{x},{y}");
+                evaluationString = $"res.{memberInfo.Name}.{methodInfo.Name}({arguments})";
+            } else if (lambdaBody is BinaryExpression binaryExpression)
+            {
+                if (binaryExpression.Type != typeof(bool))
+                    throw new NotImplementedException();
+                evaluationString = ExpressionUtils.BinaryExpressionToString(binaryExpression, "res");
             }
 
-            using (codeWriter.UseBrackets("else"))
+            codeWriter.WriteNewLine();
+
+            if (WhenTrueBuilder == null && WhenFalseBuilder != null)
             {
-                WhenFalseBuilder?.WriteCode(codeWriter);
+                using (codeWriter.UseBrackets($"if (!({evaluationString}))"))
+                {
+                    WhenFalseBuilder.WriteCode(codeWriter);
+                }
+            }
+            else
+            {
+                if (WhenTrueBuilder != null)
+                {
+                    using (codeWriter.UseBrackets($"if ({evaluationString})"))
+                    {
+                        WhenTrueBuilder.WriteCode(codeWriter);
+                    }
+                }
+
+                if (WhenFalseBuilder != null)
+                {
+                    using (codeWriter.UseBrackets("else"))
+                    {
+                        WhenFalseBuilder?.WriteCode(codeWriter);
+                    }
+                }
             }
         }
     }
