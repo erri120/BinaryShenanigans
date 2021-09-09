@@ -9,8 +9,4 @@
       <ProjectReference Include="..\BinaryShenanigans.BinaryParser\BinaryShenanigans.BinaryParser.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Generated" />
-    </ItemGroup>
-
 </Project>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace BinaryShenanigans.BinaryParser.Gen
+namespace BinaryShenanigans.BinaryParser.Gen.Utils
 {
     public static class ReflectionUtils
     {

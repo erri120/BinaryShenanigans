@@ -1,35 +1,35 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
-using Spectre.Console;
 
-namespace BinaryShenanigans.BinaryParser.Gen
+namespace BinaryShenanigans.BinaryParser.Gen.Utils
 {
-    public static class NukeUtils
+    internal static class NukeUtils
     {
         public record BuildProjectResult(bool Success, string ProjectName, string AssemblyLocation);
 
-        public static BuildProjectResult BuildProject(string projectPath)
+        public static BuildProjectResult BuildProject(ILogger logger, string projectPath)
         {
-            AnsiConsole.WriteLine($"Building project {projectPath}");
+            logger.LogInformation("Building project {Path}", projectPath);
             var build = DotNetTasks.DotNetBuild(x => x
                 .SetProjectFile(projectPath));
 
             var buildErrors = build.Where(x => x.Type == OutputType.Err).ToList();
             if (buildErrors.Any())
             {
-                AnsiConsole.WriteLine("Build finished with errors:");
+                logger.LogWarning("Build finished with {ErrorCount} errors", buildErrors.Count);
                 foreach (var errOutput in buildErrors)
                 {
-                    AnsiConsole.Render(new Markup($"[bold red]{errOutput.Text}[/]"));
+                    logger.LogError("Error: {Error}", errOutput.Text);
                 }
 
                 return new BuildProjectResult(false, string.Empty, string.Empty);
             }
 
-            AnsiConsole.WriteLine("Build finished successfully");
+            logger.LogInformation("Build finished successfully");
 
             var projectName = projectPath.Split(".csproj")[0].Split(Path.DirectorySeparatorChar).Last();
             var assemblyLocation = build
@@ -38,8 +38,8 @@ namespace BinaryShenanigans.BinaryParser.Gen
                 .Replace($"{projectName} -> ", "")
                 .Trim();
 
-            AnsiConsole.WriteLine($"Project Name: {projectName}");
-            AnsiConsole.WriteLine($"Assembly Location: {assemblyLocation}");
+            logger.LogDebug("Project Name: {ProjectName}", projectName);
+            logger.LogDebug("Assembly Location: {AssemblyLocation}", assemblyLocation);
             return new BuildProjectResult(true, projectName, assemblyLocation);
         }
     }
