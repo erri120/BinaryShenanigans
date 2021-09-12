@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeWriterUtils", "libs\Cod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryShenanigans.BinaryParser.GenRunner", "BinaryShenanigans.BinaryParser.GenRunner\BinaryShenanigans.BinaryParser.GenRunner.csproj", "{54DFFF57-16A4-4022-BDD0-EE7D91E5A19D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryShenanigans.BinaryParser.Gen.Tests", "BinaryShenanigans.BinaryParser.Gen.Tests\BinaryShenanigans.BinaryParser.Gen.Tests.csproj", "{3D500B1E-C869-4880-BFEC-1E76F65F6926}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,5 +65,9 @@ Global
 		{54DFFF57-16A4-4022-BDD0-EE7D91E5A19D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54DFFF57-16A4-4022-BDD0-EE7D91E5A19D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54DFFF57-16A4-4022-BDD0-EE7D91E5A19D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D500B1E-C869-4880-BFEC-1E76F65F6926}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D500B1E-C869-4880-BFEC-1E76F65F6926}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D500B1E-C869-4880-BFEC-1E76F65F6926}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D500B1E-C869-4880-BFEC-1E76F65F6926}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
