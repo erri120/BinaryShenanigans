@@ -78,7 +78,7 @@ namespace BinaryShenanigans.BinaryParser.Gen.Tests.Generated
                 .Build();
 
             Assert.True(generator.Run());
-            Assert.Equal(expectedOutput, generator.GeneratedOutput["SomeClassParser.cs"].Replace("\n", "\r\n"));
+            Assert.Equal(expectedOutput.Replace(Environment.NewLine, "\n"), generator.GeneratedOutput["SomeClassParser.cs"]);
         }
     }
 
