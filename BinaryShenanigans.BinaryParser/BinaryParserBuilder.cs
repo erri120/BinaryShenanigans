@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 using BinaryShenanigans.BinaryParser.Interfaces;
 using BinaryShenanigans.BinaryParser.ReadSteps;
 using CodeWriterUtils;
@@ -43,6 +44,18 @@ namespace BinaryShenanigans.BinaryParser
         public BinaryParserBuilder(BinaryParserBuilder<T> parent)
         {
             _parent = parent;
+        }
+
+        public IBinaryParserBuilder<T> CustomLogic(CustomLogicDelegate<T> customLogicDelegate)
+        {
+            var methodInfo = customLogicDelegate.Method;
+            if (!methodInfo.Attributes.HasFlag(MethodAttributes.Public))
+                throw new NotImplementedException();
+            if (!methodInfo.Attributes.HasFlag(MethodAttributes.Static))
+                throw new NotImplementedException();
+
+            _steps.Add(new CustomLogicStep(methodInfo));
+            return this;
         }
 
         public IBinaryParserBuilder<T> SkipBytes(ulong count)

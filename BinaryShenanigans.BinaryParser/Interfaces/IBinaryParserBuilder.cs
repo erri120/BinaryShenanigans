@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Linq.Expressions;
+using BinaryShenanigans.Reader;
 using JetBrains.Annotations;
 
 namespace BinaryShenanigans.BinaryParser.Interfaces
 {
+    public delegate void CustomLogicDelegate<in T>(T instance, SpanReader spanReader, ReadOnlySpan<byte> span);
+
     [PublicAPI]
     public interface IBinaryParserBuilder<T>
     {
-        #region Logic
+        IBinaryParserBuilder<T> CustomLogic(CustomLogicDelegate<T> customLogicDelegate);
 
         IBinaryParserBuilderIfBranch<T> If(Expression<Func<T, bool>> expression);
 
-        #endregion
-
-        #region Skips
-
         IBinaryParserBuilder<T> SkipBytes(ulong count);
-
-        #endregion
 
         #region Read Functions
 

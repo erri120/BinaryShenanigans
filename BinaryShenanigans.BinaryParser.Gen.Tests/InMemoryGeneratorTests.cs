@@ -2,6 +2,7 @@
 using System.Reflection;
 using BinaryShenanigans.BinaryParser.Gen.GeneratorBuilder;
 using BinaryShenanigans.BinaryParser.Interfaces;
+using BinaryShenanigans.Reader;
 using Xunit;
 
 namespace BinaryShenanigans.BinaryParser.Gen.Tests
@@ -63,6 +64,7 @@ namespace BinaryShenanigans.BinaryParser.Gen.Tests.Generated
             {
                 res.HalfValue = reader.ReadHalf(span, true);
             }
+            BinaryShenanigans.BinaryParser.Gen.Tests.SomeClassConfiguration.CustomLogicMethod(res, reader, span);
 
             return res;
         }
@@ -78,7 +80,9 @@ namespace BinaryShenanigans.BinaryParser.Gen.Tests.Generated
                 .Build();
 
             Assert.True(generator.Run());
-            Assert.Equal(expectedOutput.Replace(Environment.NewLine, "\n"), generator.GeneratedOutput["SomeClassParser.cs"]);
+
+            var generatedOutput = generator.GeneratedOutput["SomeClassParser.cs"];
+            Assert.Equal(expectedOutput.Replace(Environment.NewLine, "\n"), generatedOutput);
         }
     }
 
@@ -124,7 +128,13 @@ namespace BinaryShenanigans.BinaryParser.Gen.Tests.Generated
                     .WhenFalse()
                 .If(x => x.Int16Value == x.Int32Value)
                     .WhenTrue()
-                    .WhenFalse(b => b.ReadHalf(x => x.HalfValue));
+                    .WhenFalse(b => b.ReadHalf(x => x.HalfValue))
+                .CustomLogic(CustomLogicMethod);
+        }
+
+        public static void CustomLogicMethod(SomeClass instance, SpanReader spanReader, ReadOnlySpan<byte> span)
+        {
+            instance.DoubleValue = spanReader.ReadDouble(span);
         }
     }
 }
