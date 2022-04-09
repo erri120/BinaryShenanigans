@@ -11,13 +11,14 @@ namespace BinaryShenanigans.Reader
     public class SpanReader
     {
         private readonly int _count;
+        private int _position;
 
         public bool LittleEndian;
-        public int Position { get; private set; }
+        public int Position => _position;
 
         public SpanReader(int start, int count, bool littleEndian = true)
         {
-            Position = start;
+            _position = start;
             _count = count;
 
             LittleEndian = littleEndian;
@@ -25,9 +26,9 @@ namespace BinaryShenanigans.Reader
 
         public void SkipBytes(int count)
         {
-            if (Position + count > _count)
+            if (_position + count > _count)
                 throw new EndOfStreamException();
-            Position += count;
+            _position += count;
         }
 
         public short ReadInt16(ReadOnlySpan<byte> span) => ReadInt16(span, LittleEndian);
@@ -113,7 +114,7 @@ namespace BinaryShenanigans.Reader
 
         public ReadOnlySpan<char> ReadString(ReadOnlySpan<byte> span, Encoding encoding)
         {
-            var slice = span[Position..];
+            var slice = span[_position..];
             var index = slice.IndexOf((byte)'\0');
             if (index == -1)
                 throw new EndOfStreamException();
@@ -125,8 +126,13 @@ namespace BinaryShenanigans.Reader
 
         public byte ReadByte(ReadOnlySpan<byte> span)
         {
-            var slice = GetSpan(span, sizeof(byte));
-            return slice[0];
+            if (_position + sizeof(byte) > _count)
+                throw new EndOfStreamException();
+
+            var value = span[_position];
+            _position += sizeof(byte);
+
+            return value;
         }
 
         public ReadOnlySpan<byte> ReadBytes(ReadOnlySpan<byte> span, int count)
@@ -137,11 +143,11 @@ namespace BinaryShenanigans.Reader
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private ReadOnlySpan<byte> GetSpan(ReadOnlySpan<byte> span, int size)
         {
-            if (Position + size > _count)
+            if (_position + size > _count)
                 throw new EndOfStreamException();
 
-            var valueSpan = span.Slice(Position, size);
-            Position += size;
+            var valueSpan = span.Slice(_position, size);
+            _position += size;
             return valueSpan;
         }
     }
