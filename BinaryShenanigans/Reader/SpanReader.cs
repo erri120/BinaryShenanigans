@@ -123,6 +123,17 @@ namespace BinaryShenanigans.Reader
             return res;
         }
 
+        public byte ReadByte(ReadOnlySpan<byte> span)
+        {
+            var slice = GetSpan(span, sizeof(byte));
+            return slice[0];
+        }
+
+        public ReadOnlySpan<byte> ReadBytes(ReadOnlySpan<byte> span, int count)
+        {
+            return GetSpan(span, count);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private ReadOnlySpan<byte> GetSpan(ReadOnlySpan<byte> span, int size)
         {
