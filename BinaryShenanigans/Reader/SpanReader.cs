@@ -124,6 +124,7 @@ namespace BinaryShenanigans.Reader
             return res;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public byte ReadByte(ReadOnlySpan<byte> span)
         {
             if (_position + sizeof(byte) > _count)
